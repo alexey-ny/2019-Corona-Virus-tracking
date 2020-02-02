@@ -2,7 +2,7 @@
 """
 Created on Thu Jan 30 22:41:41 2020
 
-@author: Alexey Kotlik
+@author: alex
 """
 
 import pandas as pd
@@ -14,7 +14,7 @@ import datetime
 import geopandas as gpd
 
 import folium
-from folium import Choropleth, Circle, Marker
+from folium import Choropleth, Circle, Marker, CircleMarker
 from folium.plugins import HeatMap, MarkerCluster
 
 from geopandas.tools import geocode
@@ -63,9 +63,9 @@ for report in root.iter("tbody"):
         region = []
         for cell in row[1:]:
             if cell.text == None:
-                print(len(cell) )
-                print(cell.tag)
-                print(cell.getnext())
+#                print(len(cell) )
+#                print(cell.tag)
+#                print(cell.getnext())
                 if len(cell) > 1:
                     div = cell[0]
                     region.append(div.text)
@@ -131,12 +131,6 @@ full_df = df[columns]
 
 full_df.to_csv('reports.csv')    
     
-max_report = max(full_df.Report)
-#Last_Report = full_df[full_df.Report == max_report]
-#Last_Report.Deaths.sum(axis=0)
-#Last_Report.Recovered.sum(axis=0)
-#Last_Report.Confirmed.sum(axis=0)
-
 reports = full_df.Report.unique()
 confirmed = []
 deaths = []
@@ -163,8 +157,20 @@ def fix_UAE(row):
         row = 'United Arab Emirates'
     return row
 
+def fix_Chicago(row):
+    if row == 'Chicago': 
+        row = 'Illinois'
+    return row
+
 full_geo['Country'] = full_geo['Country'].apply(lambda x: fix_china(x))
 full_geo['Country'] = full_geo['Country'].apply(lambda x: fix_UAE(x))
+full_geo['State'] = full_geo['State'].apply(lambda x: fix_Chicago(x))
+
+max_report = max(full_geo.Report)
+Last_Report = full_geo[full_geo.Report == max_report]
+last_deaths = Last_Report.Deaths.sum(axis=0)
+last_recovered = Last_Report.Recovered.sum(axis=0)
+last_confirmed = Last_Report.Confirmed.sum(axis=0)
 
 unque_states =  full_geo.State.unique().tolist()
 unque_countries =  full_geo[full_geo.State == ''].Country.unique().tolist()
@@ -179,19 +185,73 @@ def my_geocoder(row):
     except:
         return None
 
-full_geo[['Latitude', 'Longitude', 'geometry']] = full_geo.apply(lambda x: my_geocoder(x['Country']+','+x['State']), axis=1)
 un_states[['Latitude', 'Longitude', 'geometry']] = un_states.apply(lambda x: my_geocoder(x['Name']), axis=1)
 un_states.dropna(axis = 0, inplace = True)
 un_countries[['Latitude', 'Longitude', 'geometry']] = un_countries.apply(lambda x: my_geocoder(x['Name']), axis=1)
 
 start_point = [un_states.iloc[0].Latitude, un_states.iloc[0].Longitude]
 
-m_1 = folium.Map(location=start_point, tiles='openstreetmap', zoom_start=5)
-# Add points to the map
+def color_producer(val):
+    if val == 1:
+        return 'forestgreen'
+    else:
+        return 'darkred'
+
+def radius_producer(state, country, number):
+    print(number)
+    try:
+        if country in unque_countries:
+#            print(country)
+            num = Last_Report[(Last_Report.Country == country)][number].array[0]
+        else:
+#            print(country,' ', state)
+            num = Last_Report[(Last_Report.State == state)][number].array[0]
+    except:
+        num = 0
+    num = int(np.sqrt(num))
+    print(num)
+    return int(num)
+
+map = folium.Map(location=start_point, tiles='CartoDB dark_matter', zoom_start=5)
+
+# Add a bubble map to the base map
 for idx, row in un_states.iterrows():
-    Marker([row['Latitude'], row['Longitude']]).add_to(m_1)
+        CircleMarker([row['Latitude'], row['Longitude']],
+               radius = radius_producer(row['Name'], '', 'Confirmed'),
+               popup = row['Name'] + ' '  + '(Confirmed='+str(10) + ' Deaths=' + str(5) + ' Recovered=' + str(5) + ')',
+               fill_opacity = 0.3,
+               weight = 2, 
+               fill = True, 
+               color=color_producer(2),
+               fillColor = color_producer(2)
+               ).add_to(map)
+        CircleMarker([row['Latitude'], row['Longitude']],
+               radius = radius_producer(row['Name'], '', 'Deaths'),
+               fill_opacity = 0.3,
+               weight = 1, 
+               fill = False, 
+               color=color_producer(1),
+#               fillColor = color_producer(1)
+               ).add_to(map)
 
 for idx, row in un_countries.iterrows():
-    Marker([row['Latitude'], row['Longitude']]).add_to(m_1)
-    
-m_1.save("mymap.html")
+        CircleMarker([row['Latitude'], row['Longitude']],
+               radius = radius_producer('', row['Name'], 'Deaths'),
+               popup = row['Name'] + ' '  + '(Confirmed='+str(10) + ' Deaths=' + str(5) + ' Recovered=' + str(5) + ')',
+               fill_opacity = 0.3,
+               weight = 2, 
+               fill = True, 
+               color=color_producer(2),
+               fillColor = color_producer(2)
+               ).add_to(map)
+        CircleMarker([row['Latitude'], row['Longitude']],
+               radius = radius_producer(row['Name'], '', 'Deaths'),
+               fill_opacity = 0.3,
+               weight = 1, 
+               fill = False, 
+               color=color_producer(1),
+#               fillColor = color_producer(1)
+               ).add_to(map)
+
+# Display the map
+map.save("2019_nCoV_bubbles3.html")
