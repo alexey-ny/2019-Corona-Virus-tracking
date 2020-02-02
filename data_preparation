@@ -2,7 +2,7 @@
 """
 Created on Thu Jan 30 22:41:41 2020
 
-@author: alex
+@author: Alexey Kotlik
 """
 
 import pandas as pd
@@ -39,12 +39,10 @@ url = 'https://docs.google.com/spreadsheets/d/1yZv9w9zRKwrGTaR-YzmAqMefw4wMlaXoc
 r = requests.get(url, allow_redirects=True)
 open('JHU_CSSE_coronavirus.html', 'wb').write(r.content)
 
-
 parser = etree.HTMLParser()
 tree   = etree.parse('JHU_CSSE_coronavirus.html', parser)
 
 result = etree.tostring(tree.getroot(), pretty_print=True, method="html")
-
 root = tree.getroot()
 
 days = []
@@ -63,9 +61,6 @@ for report in root.iter("tbody"):
         region = []
         for cell in row[1:]:
             if cell.text == None:
-#                print(len(cell) )
-#                print(cell.tag)
-#                print(cell.getnext())
                 if len(cell) > 1:
                     div = cell[0]
                     region.append(div.text)
@@ -81,13 +76,11 @@ df = pd.DataFrame(days[0][1:], columns = days[0][0])
 df['Suspected'] = ''
 df['Report'] = report_N
 
-
 for report in days[1:]:
     report_N -= 1
     df_day = pd.DataFrame(report[1:], columns = report[0])
     df_day['Report'] = report_N
-    df = df.append(df_day, ignore_index = False)
-        
+    df = df.append(df_day, ignore_index = False)      
         
 df.fillna(0, inplace = True)
 df["Suspected"].replace({"": 0}, inplace=True)
@@ -95,8 +88,7 @@ df["Deaths"].replace({"": 0}, inplace=True)
 df["Recovered"].replace({"": 0}, inplace=True)
 df["Confirmed"].replace({"": 0}, inplace=True)
 df = df.astype({'Suspected': 'int','Recovered': 'int','Deaths': 'int','Confirmed': 'int'})
-
-  
+ 
 def date_conversion(temp_date):
     d_list = temp_date.split(" ")
     if len(d_list) == 0:
@@ -124,11 +116,9 @@ def time_conversion(temp_date):
 
 
 df['Update_date'] = df.Update.apply(lambda x : date_conversion(x))    
-
 df['Update_time'] = df.Update.apply(lambda x : time_conversion(x))    
 
 full_df = df[columns]
-
 full_df.to_csv('reports.csv')    
     
 reports = full_df.Report.unique()
