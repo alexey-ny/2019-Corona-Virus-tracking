@@ -4,9 +4,7 @@ Created on Feb 11  2020
 
 @author: Alexey Kotlik
 """
-
 import pandas as pd
-
        
 url_recovered = 'https://github.com/CSSEGISandData/COVID-19/raw/master/time_series/time_series_2019-ncov-Recovered.csv'
 url_deaths = 'https://github.com/CSSEGISandData/COVID-19/raw/master/time_series/time_series_2019-ncov-Deaths.csv'
