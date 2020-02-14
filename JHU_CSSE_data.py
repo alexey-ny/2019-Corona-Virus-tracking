@@ -97,7 +97,6 @@ def renew_data():
             else:
                 header.append('ttt')                    # fix problem with comment added on Feb 1st causing extra empty columns
 
-#        print(header)
         regions.append(header)
         
         for row in report[1:]:
@@ -121,7 +120,6 @@ def renew_data():
     df['Report'] = report_N
 
     for report in days[1:]:
-#        print(report[0])
         report_N -= 1
         t_list = [x for x in report[0] if x!='ttt']     # fix problem with comment added on Feb 1st causing extra empty columns
         df_day = pd.DataFrame(report[1:], columns = report[0])
@@ -135,13 +133,11 @@ def renew_data():
     df["Recovered"].replace({"": 0}, inplace=True)
     df["Confirmed"].replace({"": 0}, inplace=True)
     df = df.astype({'Suspected': 'int','Recovered': 'int','Deaths': 'int','Confirmed': int, 'Report': int, 'State':str,'Country':str})
-#    df = df.astype({'Suspected': 'int','Recovered': 'int','Deaths': 'int','Confirmed': 'int'})
           
     df['Update_date'] = df.Update.apply(lambda x : date_conversion(x))    
     df['Update_time'] = df.Update.apply(lambda x : time_conversion(x))    
     
     full_df = df[fColumns]
-#    full_df.to_csv('reports.csv')    
         
     reports = full_df.Report.unique()
     confirmed = []
@@ -162,7 +158,3 @@ def renew_data():
     full_geo['State'] = full_geo['State'].apply(lambda x: fix_Chicago(x))
 
     full_geo.to_csv('reports.csv', index = False)    
-
-#renew_data()
-#full_geo[full_geo['State']=='']
-#df.info()
