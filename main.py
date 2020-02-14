@@ -33,7 +33,6 @@ for idx, row in current_states.iterrows():
                weight = 1, 
                fill = False, 
                color=color_producer(1),
-#               fillColor = color_producer(1)
                ).add_to(map)
 
 for idx, row in current_countries.iterrows():
@@ -53,7 +52,6 @@ for idx, row in current_countries.iterrows():
                weight = 1, 
                fill = False, 
                color=color_producer(1),
-#               fillColor = color_producer(1)
                ).add_to(map)
 
 # Display the map
