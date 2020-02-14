@@ -16,3 +16,8 @@ I started building this dashboard almost from the time JHU began collecting and 
 
 I set up a VPS server with Flask running this dashboard. I use Folium for mapping, and Plotly.js for interactive line plots.
 You may check the results at http://seedsfrom.space:5000/virus-ncov2019 .
+
+# To Do:
+- interactive change of geographical map to reflect spread of the virus;
+- mapping air travel connections?
+- long shot - predictions.
