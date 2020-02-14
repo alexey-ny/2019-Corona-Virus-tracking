@@ -26,8 +26,6 @@ field_names = {
 
 fColumns =  ['Country', 'State', 'Confirmed', 'Deaths', 'Recovered', 'Suspected', 'Update_date', 'Update_time', 'Report']
        
-#url = 'https://docs.google.com/spreadsheets/d/1yZv9w9zRKwrGTaR-YzmAqMefw4wMlaXocejdxZaTs6w'
-#url = 'https://docs.google.com/spreadsheets/d/1wQVypefm946ch4XDp37uZ-wartW4V7ILdg-qYiDXUHM'
 url = 'https://docs.google.com/spreadsheets/d/1wQVypefm946ch4XDp37uZ-wartW4V7ILdg-qYiDXUHM/htmlview?usp=sharing&sle=true#'
 url_time_series = 'https://docs.google.com/spreadsheets/d/1UF2pSkFTURko2OvfHWWlFpDFAr1UxCBA4JLwlSP6KFo/edit?usp=sharing'
 
@@ -140,13 +138,11 @@ def renew_data():
     df["Recovered"].replace({"": 0}, inplace=True)
     df["Confirmed"].replace({"": 0}, inplace=True)
     df = df.astype({'Suspected': 'int','Recovered': 'int','Deaths': 'int','Confirmed': int, 'Report': int, 'State':str,'Country':str})
-#    df = df.astype({'Suspected': 'int','Recovered': 'int','Deaths': 'int','Confirmed': 'int'})
           
     df['Update_date'] = df.Update.apply(lambda x : date_conversion(x))    
     df['Update_time'] = df.Update.apply(lambda x : time_conversion(x))    
     
     full_df = df[fColumns]
-#    full_df.to_csv('reports.csv')    
         
     reports = full_df.Report.unique()
     confirmed = []
