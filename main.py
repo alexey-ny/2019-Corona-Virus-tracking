@@ -56,5 +56,3 @@ for idx, row in current_countries.iterrows():
 
 # Display the map
 map.save("2019_nCoV_bubbles5.html")
-
-
