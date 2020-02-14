@@ -11,10 +11,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import json
 
-# from mpld3 import plugins
-# import base64
-# from io import BytesIO
-
 from JHU_CSSE_timeline_GitHub import *
 
 from flask import Flask, render_template, redirect, url_for, request
@@ -57,18 +53,6 @@ def radius_producer(number):
 
 app = Flask(__name__)
 
-
-@app.route('/', methods=['GET'])
-def hello_world():
-    return render_template('index.html')
-
-
-# @app.route('/main', methods=['GET'])
-# def main():
-#     return render_template('main.html')
-#     # return render_template('main.html', messages=messages)
-
-
 confirmed_data.State[confirmed_data.State==0] = '- '
 recovered_data.State[recovered_data.State==0] = '- '
 deaths_data.State[deaths_data.State==0] = '- '
@@ -81,7 +65,6 @@ def virus_ncov2019():
     f_map = folium.Map(location=start_point, tiles='CartoDB dark_matter', zoom_start=5)
 
     #map all confirmed cases
-    row =42
     for row in range(confirmed_data.shape[0]):
         cur_row = confirmed_data.iloc[row]
         s_rad = radius_producer(cur_row[-1])
