@@ -15,10 +15,6 @@ from folium.plugins import HeatMap, MarkerCluster
 from geopandas.tools import geocode
 import geopandas as gpd
 
-#full_geo = pd.read_csv('reports.csv')
-#full_geo.State = full_geo.State.fillna('')
-#full_geo.info()
-
 def my_geocoder(row):
     print(row)
     try:
@@ -37,7 +33,6 @@ def color_producer(val):
         return 'lightgreen'
 
 def radius_producer(number):
-#    print(number)
     if number == '':
         num = 0
     else:
