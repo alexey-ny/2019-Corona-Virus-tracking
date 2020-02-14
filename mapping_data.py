@@ -17,7 +17,6 @@ import geopandas as gpd
 
 full_geo = pd.read_csv('reports.csv')
 full_geo.State = full_geo.State.fillna('')
-#full_geo.info()
 
 def my_geocoder(row):
     print(row)
@@ -35,13 +34,10 @@ def color_producer(val):
         return 'darkred'
 
 def radius_producer(state, country, number):
-#    print(number)
     try:
         if country in unque_countries:
-#            print(country)
             num = Last_Report[(Last_Report.Country == country)][number].array[0]
         else:
-#            print(country,' ', state)
             num = Last_Report[(Last_Report.State == state)][number].array[0]
     except:
         num = 0
