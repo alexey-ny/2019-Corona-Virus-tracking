@@ -27,7 +27,6 @@ for row in confirmed_list[1:]:
             s_rad = s_rad * 2
         CircleMarker([row[3], row[4]],
                radius = s_rad * 2,
-#               radius = radius_producer(s_rad),
                popup = row[0] + ' ' + row[1]+ ' ' + '(Confirmed = '+ row[-1] + ')',
                fill_opacity = 0.3,
                weight = 2, 
@@ -42,7 +41,6 @@ for row in deaths_list[1:]:
     if s_rad > 0 :
         CircleMarker([row[3], row[4]],
                radius = s_rad * 2,
-#               radius = radius_producer(s_rad) * 2,
                popup = row[0] + ' ' + row[1]+ ' ' + '(Deaths = '+ row[-1] + ')',
                fill_opacity = 0.3,
                weight = 2, 
