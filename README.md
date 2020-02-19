@@ -2,7 +2,7 @@
 Tracking and visualizition tool for the outbreak of Coronavirus COVID-19.
 
 This is a Vizual Dashboard for the Coronavirus COVID-19 (former Novel Corona Virus nCoV-2019) based on data provided by the Johns Hopkins University Center for Systems Science and Engineering (JHU CCSE). The data is being downloaded on request in real-time from the time-series spredsheets they share publicly.
-The dashboard reports cases at the province level in China, city level in the US, Australia and Canada, and at the country level otherwise. 
+The dashboard reports cases at the province level in China, city level in the US, Australia and Canada, and at the country level otherwise.
 
  Data Sources JHU CCSE used:
 
@@ -20,4 +20,4 @@ You may check the results at http://seedsfrom.space:5000/virus-ncov2019 .
 # To Do:
 - interactive change of geographical map to reflect spread of the virus;
 - mapping air travel connections?
-- long shot - predictions.
+- adding more statistics.
