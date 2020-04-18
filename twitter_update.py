@@ -35,7 +35,6 @@ class JSONEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 def parse_tweet(row):
-# row =    twit_df.iloc[0] 
     links = row.links
     hashtags = row.hashtags 
     t_text = row.text
@@ -59,17 +58,10 @@ def tweet_parsing(df):
     df['parsed_text'] = df.apply(lambda row: parse_tweet(row), axis = 1)
     return df
 
-
-# twit_df1 = tweet_parsing(twit_df)
-#     new_twit_CDC = tweet_parsing(new_twit_CDC)
-
 def new_tweets():
     list_of_tweets_UN = query_tweets_from_user('UN',10)
     list_of_tweets_CDC = query_tweets_from_user('CDCgov',10)
     list_of_tweets_WHO = query_tweets_from_user('WHO',10)
-    # list_of_tweets_UN = query_tweets_from_user('UN',20)
-    # list_of_tweets_CDC = query_tweets_from_user('CDCgov',20)
-    # list_of_tweets_WHO = query_tweets_from_user('WHO',20)
 
     file = open('data/WHO_twitter_new.json','w')
     json.dump(list_of_tweets_WHO, file, cls=JSONEncoder)
@@ -103,28 +95,6 @@ def new_tweets():
     new_twit_WHO = twit_df.drop_duplicates('tweet_id')
     new_twit_WHO.to_json('data/WHO_twitter_output.json', orient = 'records')
 
-
     twit_df = pd.concat([new_twit_CDC, new_twit_UN, new_twit_WHO], ignore_index = True) 
 
     return twit_df 
-
-
-
-#     new_twit_df = twit_df.drop_duplicates('tweet_id')
-#     new_twit_df = pd.concat([twit_CDC, twit_UN, twit_WHO, twit_df]) 
-#     tt = twit_df.duplicated
-
-
-
-# #Or save the retrieved tweets to file:
-# file = open('data/WHO_twitter_output.json','w')
-# file = open('data/UN_twitter_output.json','w')
-# file = open('data/CDC_twitter_output.json','w')
-# json.dump(list_of_tweets, file, cls=JSONEncoder)
-# file.close()
-
-# tweet_df = pd.read_json('twitter_output.json', encoding='utf-8')
-
-# with codecs.open('twitter_output.txt','r','utf-8') as f:
-#     new_tweets = json.load(f, encoding='utf-8')
-    
